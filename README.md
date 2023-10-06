@@ -1,1 +1,1 @@
-# End-to-End-Keyword-Spotting-with-CI-CD-Pipeline
+# End-to-End Keyword Spotting (KWS) with CI/CD Pipeline
