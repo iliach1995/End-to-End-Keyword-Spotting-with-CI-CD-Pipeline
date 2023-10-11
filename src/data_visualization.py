@@ -54,12 +54,18 @@ def visualizeClassBalance(labels: np.ndarray) -> None:
     plt.ylabel("Count")
     plt.show()
 
-    #a = 2
-    return None
-
 
 
 
 if __name__ == '__main__':
-    trainData, trainLabels = loadData(path = "./inputnpy", dataType='train')
+    trainData, trainLabels = loadData(path = "./inputnpy/main", dataType='train')
     visualizeClassBalance(trainLabels)
+
+    valData, valLabels = loadData(path = "./inputnpy/main", dataType='val')
+    visualizeClassBalance(valLabels)
+
+    devData, devLabels = loadData(path = "./inputnpy/main", dataType='dev')
+    visualizeClassBalance(devLabels)
+
+    testData, testLabels = loadData(path = "./inputnpy/main", dataType='test')
+    visualizeClassBalance(testLabels)
