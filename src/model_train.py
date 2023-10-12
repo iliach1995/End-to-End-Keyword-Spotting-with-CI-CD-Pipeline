@@ -30,11 +30,35 @@ def loadData(path: str , dataType: str) -> (np.ndarray, np.ndarray):
     return data, labels
 
 @dataclass
-class Classifier():
+class CNN():
+
+    """
+    create a CNN class for building a model
+    """
        
     def build_model(self, num_filters: list, num_dense_layer: list, 
                     INPUT_SHAPE: tuple, TARGET_SHAPE: tuple, 
                     KERNEL_SIZE, POOL_SIZE, DROPOUT: float) -> Sequential:
+        
+        """
+        Method to define model that can be used for training
+        and inference. This existing model can also be tweaked
+        by changing parameters, based on the requirements.
+
+        Parameters
+        ----------------
+        num_filters: list. a list contatining the number of filters for each conv2d 
+        num_dense_layer: list, contaiing number of nodes for each layer
+        INPUT_SHAPE: the input shape of the model for reshaping layer (first layer)
+        TARGET_SHAPE: the output shape of the model for reshaping layer (first layer)
+        KERNEL_SIZE: tuple include the size of kernel for conv2d layers
+        POOL_SIZE: pool size for maxpolling 2d layer
+        DROPOUT: amount of drop out after eacl layer
+
+        Return
+        ---------------
+        Sequential model
+        """
 
         model = Sequential()
         model.add(Reshape(input_shape=INPUT_SHAPE, target_shape=TARGET_SHAPE))
@@ -56,15 +80,11 @@ class Classifier():
             model.add(ReLU())
             model.add(Dropout(DROPOUT))
 
-        model.add(Dense(NUM_LABELS))
+        model.add(Dense(NUM_LABELS, activation='softmax'))
 
-    def compile(self, learning_rate: float, optimizer: float) -> None:
+        return model
 
-        self.optimizer = optimizer
-        self.learning_rate = learning_rate
-
-        return None
-
+    
 
 
 
@@ -74,5 +94,5 @@ if __name__ == "__main__":
         trainDataTruncate = trainData[0:1000,:,:]
     
     np.save("./inputnpy/train_truncate.npy", trainDataTruncate)
-    slkjd = Classifier()
-    slkjd.normalizeTrain()
+    cnn = CNN
+    model = cnn.build_model()

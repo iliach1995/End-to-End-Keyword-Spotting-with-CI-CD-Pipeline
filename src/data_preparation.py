@@ -1,3 +1,10 @@
+"""
+@author: ilia esfahani
+
+Dataset class for download the google speech dataset and Preprocess class for dividing train, validation
+test dataset and process it to MFCC. Also, in preprocess, we save the audio files as .npy format for
+future use which is much more easier.
+"""
 import tensorflow as tf
 import os
 import requests
@@ -209,11 +216,7 @@ class PreProcess():
         valFiles, valLabels = self.loadDatasetDict(datasetDict=datasetDict, fileType='val')
         devFiles, devLabels = self.loadDatasetDict(datasetDict=datasetDict, fileType='dev')
         testFiles, testLabels = self.loadDatasetDict(datasetDict=datasetDict, fileType='test')
-        """
-        randomization
-        """
-        rand1 = 1
-
+        
         self.savenpyFiles(path= path, fileType='train', files = trainFiles, sr = self.sr,
                           nMfcc= self.nMfcc, mfccLength= self.mfccLength)
         

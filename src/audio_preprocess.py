@@ -1,4 +1,8 @@
+"""
+@author: ilia esfahani
 
+Process the audio (.wav ) file to MfccFile
+"""
 from dataclasses import dataclass
 import numpy as np
 from parameters import *

@@ -1,3 +1,9 @@
+"""
+@author ilia chiniforooshan esfahani
+load .npy data and visualize the train, val, and test class (bar plot)
+This indicates that we have unimablanced dataset or not.
+This imabanace dataset should be reflected in train, val, test in the same trend
+"""
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
