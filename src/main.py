@@ -11,7 +11,7 @@ from keras.models import Sequential
 from src.experiment_tracking import MLFlowTracker
 from src.model_train import loadData, CNN
 from src.data_preparation import Dataset, PreProcess
-
+from src.load_data import load_data
 from src import train
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
@@ -41,12 +41,12 @@ def main() -> None:
         dataset_val, labels_val = preProcess.audio_files_to_numpy(fileType='train')
         """
         
-        """
-        When Loading Data, use only this part
-        """
 
-        dataset_train, labels_train = loadData(path = "./inputnpy", dataType='train')
-        dataset_val, labels_val = loadData(path = "./inputnpy", dataType='val')
+        #When Loading Data, use only this part
+
+
+        dataset_train, labels_train = load_data(path = "./inputnpy", dataType='train')
+        dataset_val, labels_val = load_data(path = "./inputnpy", dataType='val')
 
 
         labels_train_encoded = to_categorical(labels_train)

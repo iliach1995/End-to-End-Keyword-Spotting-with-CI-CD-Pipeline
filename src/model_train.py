@@ -3,10 +3,11 @@
 Buulding model using our CNN class
 
 """
-
+from keras.applications.vgg19 import VGG19, preprocess_input
 import mlflow
 import mlflow.keras
 from dataclasses import dataclass
+from keras.models import Model
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Conv2D, Flatten, Dense, MaxPooling2D
@@ -84,7 +85,49 @@ class CNN():
         return model
 
     
+    def tranfer_learning_VGG19(self, fine_tune: int = 3) -> Sequential:
+        """
+        method for making transfer learning model using VGG 16
 
+        Parameters
+        --------------
+        fine_tune: int, the number of last layer in Conv/pooling for fine tuning
+
+        Return
+        ----------------
+        model: Sequential
+        """
+
+        conv_base = VGG19(include_top=False,
+                     weights='imagenet', 
+                     input_shape=self.input_shape)
+        
+        if fine_tune > 0:
+            for layer in conv_base.layers[:-fine_tune]:
+                layer.trainable = False
+        else:
+            for layer in conv_base.layers:
+                layer.trainable = False
+
+        # Create a new 'top' of the model (i.e. fully-connected layers).
+        # This is 'bootstrapping' a new top_model onto the pretrained layers.
+        top_model = conv_base.output
+
+        top_model = Flatten(name="flatten")(top_model)
+
+        count = 1
+        for dense_layer in self.num_dense_layer:
+            top_model = Dense(dense_layer, name= 'layer'+ str(count))(top_model)
+            top_model = BatchNormalization()(top_model)
+            top_model = ReLU()(top_model)
+            top_model = Dropout(self.dropout)(top_model)
+            count+=1
+
+        output_layer = Dense(self.num_labels, activation='softmax')(top_model)
+        
+        model = Model(inputs=conv_base.input, outputs=output_layer)
+
+        return model
 
 
 if __name__ == "__main__":
