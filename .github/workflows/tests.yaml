@@ -27,5 +27,5 @@ jobs:
         
         - name: Run Unit Tests
           run: |
-              pytest tests/unit_test.py
+              pytest tests/pytest.py
         
