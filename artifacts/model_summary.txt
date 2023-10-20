@@ -1,0 +1,80 @@
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ reshape (Reshape)           (None, 99, 40, 1)         0         
+                                                                 
+ batch_normalization (Batch  (None, 99, 40, 1)         4         
+ Normalization)                                                  
+                                                                 
+ re_lu (ReLU)                (None, 99, 40, 1)         0         
+                                                                 
+ conv2d (Conv2D)             (None, 99, 40, 32)        320       
+                                                                 
+ batch_normalization_1 (Bat  (None, 99, 40, 32)        128       
+ chNormalization)                                                
+                                                                 
+ re_lu_1 (ReLU)              (None, 99, 40, 32)        0         
+                                                                 
+ max_pooling2d (MaxPooling2  (None, 49, 20, 32)        0         
+ D)                                                              
+                                                                 
+ dropout (Dropout)           (None, 49, 20, 32)        0         
+                                                                 
+ conv2d_1 (Conv2D)           (None, 49, 20, 64)        18496     
+                                                                 
+ batch_normalization_2 (Bat  (None, 49, 20, 64)        256       
+ chNormalization)                                                
+                                                                 
+ re_lu_2 (ReLU)              (None, 49, 20, 64)        0         
+                                                                 
+ max_pooling2d_1 (MaxPoolin  (None, 24, 10, 64)        0         
+ g2D)                                                            
+                                                                 
+ dropout_1 (Dropout)         (None, 24, 10, 64)        0         
+                                                                 
+ conv2d_2 (Conv2D)           (None, 24, 10, 128)       73856     
+                                                                 
+ batch_normalization_3 (Bat  (None, 24, 10, 128)       512       
+ chNormalization)                                                
+                                                                 
+ re_lu_3 (ReLU)              (None, 24, 10, 128)       0         
+                                                                 
+ max_pooling2d_2 (MaxPoolin  (None, 12, 5, 128)        0         
+ g2D)                                                            
+                                                                 
+ dropout_2 (Dropout)         (None, 12, 5, 128)        0         
+                                                                 
+ conv2d_3 (Conv2D)           (None, 12, 5, 256)        295168    
+                                                                 
+ batch_normalization_4 (Bat  (None, 12, 5, 256)        1024      
+ chNormalization)                                                
+                                                                 
+ re_lu_4 (ReLU)              (None, 12, 5, 256)        0         
+                                                                 
+ max_pooling2d_3 (MaxPoolin  (None, 6, 2, 256)         0         
+ g2D)                                                            
+                                                                 
+ dropout_3 (Dropout)         (None, 6, 2, 256)         0         
+                                                                 
+ flatten (Flatten)           (None, 3072)              0         
+                                                                 
+ layer1 (Dense)              (None, 512)               1573376   
+                                                                 
+ re_lu_5 (ReLU)              (None, 512)               0         
+                                                                 
+ dropout_4 (Dropout)         (None, 512)               0         
+                                                                 
+ layer2 (Dense)              (None, 256)               131328    
+                                                                 
+ re_lu_6 (ReLU)              (None, 256)               0         
+                                                                 
+ dropout_5 (Dropout)         (None, 256)               0         
+                                                                 
+ dense (Dense)               (None, 31)                7967      
+                                                                 
+=================================================================
+Total params: 2102435 (8.02 MB)
+Trainable params: 2101473 (8.02 MB)
+Non-trainable params: 962 (3.76 KB)
+_________________________________________________________________

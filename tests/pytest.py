@@ -9,7 +9,8 @@ import numpy as np
 from src.parameters import categories
 from config.config_type import DataProcessConfig
 from src.audio_process import AudioProcess
-
+from src.inference import KeywordSpotter
+import os
 @pytest.fixture
 def mfcc() -> np.ndarray:
     """
@@ -76,3 +77,29 @@ def test_mfcc_dimension(mfcc: pytest.fixture) -> None:
         None.
     """
     assert len(mfcc.shape) == 2
+
+def test_model_prediction() -> None:
+    """
+    test model prediction for the audio_test
+    """
+    dataConfig = DataProcessConfig()
+    kws = KeywordSpotter("./artifacts/model", dataConfig.n_mfcc, dataConfig.mfcc_length, dataConfig.sampling_rate)
+
+    allFiles = []
+    for root, dirs, files in os.walk("./dataset/modeltest"):
+
+        allFiles += [root + "/" + fileName for fileName in files if fileName.endswith(".wav")]
+
+    count = 0
+    for file in allFiles:
+        predicted_keyword , _ = kws.predict_from_audio(file)
+
+        category: str = file.split("/")[-1]
+        category = category.replace('.wav', '')
+
+        if category == predicted_keyword:
+            count+=1
+    
+    assert count>3
+
+

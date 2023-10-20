@@ -55,7 +55,7 @@ class KeywordSpotter:
         self.model = model
 
 
-    def predict(self, audio_file: str) -> Tuple[str, float]:
+    def predict_from_audio(self, audio_file: str) -> Tuple[str, float]:
         """
         Method to make predictions based on probabilities from the model on the given
         audio file.
@@ -64,7 +64,7 @@ class KeywordSpotter:
         ----------
         audio_file: str, path to audio file
 
-        Result
+        Return
         ------
         predicted_keyword: str, Predicted keyword from the model as text.
         label_probability: float, Probability of the predicted keyword.
@@ -86,8 +86,42 @@ class KeywordSpotter:
                                          mfccLength= self.mfcc_length)
 
             audio_mfcc: np.ndarray = audio_process.audiotoMfccFile(audio_file)
+            
+            predicted_keyword, label_probability = self.predict_from_mfcc(audio_mfcc)
+           
+            return predicted_keyword, label_probability
 
-            model_output = self.model.predict(audio_mfcc)
+        except Exception as exc:
+            raise Exception (f"Cannot infer from model. Please check the paths and try it again !!! {exc}") from exc
+
+    def predict_from_mfcc(self, mfcc: np.ndarray) -> Tuple[str, float]:
+        
+        """
+        Method to make predictions based on probabilities from the model on the given
+        mfcc file.
+
+        Parameters
+        ----------
+        mfcc: np.ndarray, mfcc format (numpy array)
+
+        Return
+        ------
+        predicted_keyword: str, Predicted keyword from the model as text.
+        label_probability: float, Probability of the predicted keyword.
+
+        Raises
+        ------
+        ValueError: Exception, If predicted_keyword or label_probability is none.
+        NotFoundError: Exception, When an exception is caught by the `try` block.
+        """
+        try:
+            
+            if self.model is None:
+                self.load_model()
+
+            if mfcc.ndim == 2:
+                mfcc = np.reshape(mfcc, (1,mfcc.shape[0],mfcc.shape[1]))
+            model_output = self.model.predict(mfcc)
             predicted_keyword: str = inv_categories.get(np.argmax(model_output))
             label_probability: float = max([round(value,4) for value in 
                                 list(dict(enumerate(model_output.flatten(), 1)).values())])
@@ -96,6 +130,12 @@ class KeywordSpotter:
                 raise ValueError("Model returned empty predictions!!!")
            
             return predicted_keyword, label_probability
-
+        
         except Exception as exc:
             raise Exception (f"Cannot infer from model. Please check the paths and try it again !!! {exc}") from exc
+
+
+if __name__ == '__main__':
+    kws = KeywordSpotter("./artifacts/model", 99, 40, 16000)
+    predicted_keyword, label_probability = kws.predict_from_audio("./dataset/test/audio_test.wav")
+
