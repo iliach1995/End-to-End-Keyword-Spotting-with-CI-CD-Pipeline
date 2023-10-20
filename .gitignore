@@ -2,3 +2,4 @@ venv
 input
 inputnpy
 mlruns
+src/__pycache__
