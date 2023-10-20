@@ -27,5 +27,21 @@ jobs:
         
         - name: Run Unit Tests
           run: |
-              pytest tests/pytest.py
+              pytest tests/pytest.py --junitxml=pytest-report.xml
+          continue-on-error: false
+
+        - name: Upload test results
+          if: always()
+          uses: actions/upload-artifact@v2
+          with:
+            name: test-results
+            path: pytest-report.xml
+    
+        - name: Notify on success
+          if: success()
+          run: echo "Tests passed successfully"
+    
+        - name: Notify on failure
+          if: failure()
+          run: echo "Tests failed"
         
