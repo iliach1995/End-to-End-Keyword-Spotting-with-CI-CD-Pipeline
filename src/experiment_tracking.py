@@ -1,5 +1,5 @@
 """
-@author: ilia esfahani
+@author: ilia chiniforooshan
 
 Tracks model training and log the model artifacts along with resulting metrics
 and parameters. For that purpose, `MLFlow` is used. It has the flexibility to
@@ -32,18 +32,31 @@ class MLFlowTracker:
     def __start__(self)-> None:
         """
         Dunder method, sets tracking URI and experiment name to MLFlow engine.
+
+        Return
+        ------------
+        None
         """
         mlflow.set_experiment = self.experiment_name
         mlflow.set_tracking_uri = self.tracking_uri
     
-    def log(self) -> None:
+    def log(self, run_name: str) -> None:
         
         """
         Auto logging for tracking experiment.
         log model artifacts, parameters and metrics in the ./artifacts directory.
+
+        Parameters
+        ---------------
+        run_name: str, the name of the run
+
+        Return
+        -------------
+        None
         """
         self.__start__()
         mlflow.keras.autolog()
+        mlflow.set_tag("mlflow.runName", run_name)
 
     def find_best_model(self, metric: str)-> None:
         """

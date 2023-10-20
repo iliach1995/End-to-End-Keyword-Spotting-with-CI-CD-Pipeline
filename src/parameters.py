@@ -1,4 +1,7 @@
-
+"""
+@author: ilia chiniforooshan
+parameters for changing categories to values
+"""
 categories = {
     "stop": 0,
     "nine": 1,
@@ -68,14 +71,3 @@ inv_categories = {
     30: "_background_noise_",
 }
 
-
-
-SAMPLE_RATE = 8000
-N_MFCC = 50
-MFCC_LENGTH = 20
-
-NUM_LABELS = 31
-
-
-INPUT_SHAPE = (50, 20)
-TARGET_SHAPE = (1, 50, 20)

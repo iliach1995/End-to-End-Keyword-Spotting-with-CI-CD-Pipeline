@@ -1,5 +1,5 @@
 """
-@author: ilia esfahani
+@author: ilia chiniforooshan
 
 Dataset class for download the google speech dataset and Preprocess class for dividing train, validation
 test dataset and process it to MFCC. Also, in preprocess, we save the audio files as .npy format for
@@ -151,12 +151,23 @@ class Dataset():
 @dataclass
 class PreProcess():
 
+    """
+    Preprocess the audio files into MFCC features
+
+    Instances
+    ---------------
+    dataset: an instance of dataset class
+    sr: int, sampling rate
+    nMfcc: int, the number of mfcc
+    mfccLength: int, the length of the mfcc
+    """
+
     dataset: Dataset
     sr: int
     nMfcc: int
     mfccLength: int
 
-    def audiotoMfccFile(self, path:str, sr:int,  nMfcc:int, mfccLength:int) -> np.ndarray:
+    def audiotoMfccFile(self, path:str) -> np.ndarray:
         
         """
         helper function to load audio file using librosa library. Applied MFCC and return MFCC features.
@@ -174,14 +185,14 @@ class PreProcess():
         
         
         """
-        audio, _ = librosa.load(path, sr = sr)
+        audio, _ = librosa.load(path, sr = self.sr)
 
         mfccFeatures = librosa.feature.mfcc(y = audio,
-                                             n_mfcc = nMfcc,
-                                             sr = sr)
+                                             n_mfcc = self.nMfcc,
+                                             sr = self.sr)
         
-        if (mfccLength > mfccFeatures.shape[1]):
-            padding_width = mfccLength - mfccFeatures.shape[1]
+        if (self.mfccLength > mfccFeatures.shape[1]):
+            padding_width = self.mfccLength - mfccFeatures.shape[1]
             mfccFeatures = np.pad(mfccFeatures, 
                                 pad_width =((0, 0), 
                                             (0, padding_width)),
@@ -191,49 +202,47 @@ class PreProcess():
 
         return mfccFeatures
 
+    def audio_files_to_numpy(self, fileType: str) -> \
+        (np.ndarray, np.ndarray):
 
-    def dumpAudioFiles (self, path: str) -> None:
-        
-        datasetDict = self.dataset.getDataDict()
         """
-        load the train, val, 
+        return numpy file of all the audio files
 
         Parameters
-        ---------------------
-        datasetDict: dict, a dictionary of paths and labels. Details: Dataset.getDataDict
-        path: str, path of the audio file
+        -----------------
+        fileType: list, [train, val, test, dev]
+
+        return
+        -------------------
+        mfccFeatures: np.ndarray, a numpy matrix containing all the audio files
+        labels: np.ndarray, a numpy array containing all the labels
+        """
+        
+        files, labels = self.loadDatasetDict(datasetDict=self.dataset.getDataDict(), fileType=fileType)
+        
+        mfccFeatures = self.npyFiles(files = files, sr = self.sr,
+                          nMfcc= self.nMfcc, mfccLength= self.mfccLength)
+        
+        return mfccFeatures, labels
+
+    def save_numpy (self, path: str, fileType: str, mfccFeatures: np.ndarray,
+                     labels: np.ndarray) -> None:
+        """
+        Save the MFCC features and labels in .npy format
+
+        Parameters
+        --------------
+        path: str, path for saving
+        fileType: list, [train, val, dev, test]
+        mfccFeatures: np.ndarray, all MFCC features in 3d array format
+        labels: np.ndarray, all labels in array format
 
         Return
-        ---------------------
+        ---------------
         None
         """
-
-        
-        if not os.path.isdir(path):
-            os.makedirs(path)
-
-        trainFiles, trainLabels = self.loadDatasetDict(datasetDict=datasetDict, fileType='train')
-        valFiles, valLabels = self.loadDatasetDict(datasetDict=datasetDict, fileType='val')
-        devFiles, devLabels = self.loadDatasetDict(datasetDict=datasetDict, fileType='dev')
-        testFiles, testLabels = self.loadDatasetDict(datasetDict=datasetDict, fileType='test')
-        
-        self.savenpyFiles(path= path, fileType='train', files = trainFiles, sr = self.sr,
-                          nMfcc= self.nMfcc, mfccLength= self.mfccLength)
-        
-        self.savenpyFiles(path= path, fileType='val', files = valFiles, sr = self.sr,
-                          nMfcc= self.nMfcc, mfccLength= self.mfccLength)
-        
-        self.savenpyFiles(path= path, fileType='dev', files = devFiles, sr = self.sr,
-                          nMfcc= self.nMfcc, mfccLength= self.mfccLength)
-        
-        self.savenpyFiles(path= path, fileType='test', files = testFiles, sr = self.sr,
-                          nMfcc= self.nMfcc, mfccLength= self.mfccLength)
-
-        np.save (path + '/' + "trainLabels.npy", trainLabels)
-        np.save (path + '/' + "valLabels.npy", valLabels)
-        np.save (path + '/' + "devLabels.npy", devLabels)
-        np.save (path + '/' + "testLabels.npy", testLabels)
-
+        np.save (path + '/' + fileType +'.npy', mfccFeatures)
+        np.save (path + '/' + fileType +"Labels.npy", labels)
            
     def loadDatasetDict(self, datasetDict: dict, fileType :str) -> (list, list):
         
@@ -258,16 +267,14 @@ class PreProcess():
         return files, labels
 
 
-    def savenpyFiles(self, path: str, fileType: str ,files: list, sr: int, nMfcc: int, mfccLength: int)\
-        -> None:
+    def npyFiles(self,files: list, sr: int, nMfcc: int, mfccLength: int)\
+        -> list:
 
         """
-        helper function for dumpAudioFiles for saving list of files into .npy file
+        helper function for audioFilesNumpy for changing list of files into .npy file
 
         Parameters
         ---------------
-        path: str, path to save the file
-        fileType: str, train, val, dev or test
         files: list, a list containing file paths to audios
         sr: int, sampling rate 
         nMfcc: int, Number of MFCCs to return
@@ -275,7 +282,7 @@ class PreProcess():
 
         Return
         ---------------
-        None
+        mfccFeaturesAll: list, the list of all MFCC features
         """
 
         mfccFeaturesAll = []
@@ -287,12 +294,7 @@ class PreProcess():
                                                 mfccLength= mfccLength)
             mfccFeaturesAll.append(mfccFeatures)
         mfccFeaturesAll = np.array(mfccFeaturesAll)
-        np.save (path + '/' + fileType +'.npy', mfccFeaturesAll)
+
+        return mfccFeaturesAll
 
 
-
-
-if __name__ == "__main__":
-    dataset = Dataset()
-    preprocess = PreProcess(dataset = dataset, sr = SAMPLE_RATE, nMfcc = N_MFCC, mfccLength = MFCC_LENGTH)
-    preprocess.dumpAudioFiles('./inputnpy')

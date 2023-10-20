@@ -1,5 +1,5 @@
 """
-@author: ilia esfahani
+@author: ilia chiniforooshan
 
 Process the audio (.wav ) file to MfccFile
 """
@@ -10,6 +10,16 @@ import librosa
 
 @dataclass
 class AudioProcess():
+
+    """
+    Class for preprocessing audio files to MFCC
+
+    Instances
+    ----------------
+    sr: int, sampling rate
+    nMFCC: int, number of MFCC features
+    mfccLength: int, length of the mfcc
+    """
 
     sr: int 
     nMfcc: int
@@ -47,5 +57,3 @@ class AudioProcess():
     
         return mfccFeatures
     
-if __name__ == '__main__':
-    audioProcess = AudioProcess(SAMPLE_RATE, N_MFCC,MFCC_LENGTH)
