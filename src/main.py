@@ -3,7 +3,6 @@
 Script to train the model using .npy file using CNN model 
 and logged model artifacts using mlflow
 """
-import sys
 import warnings
 from keras.utils import to_categorical
 from keras.models import Sequential
