@@ -6,7 +6,6 @@ and logged model artifacts using mlflow
 import sys
 import warnings
 from keras.utils import to_categorical
-from mlflow import keras
 from keras.models import Sequential
 from src.experiment_tracking import MLFlowTracker
 from src.model_train import CNN
