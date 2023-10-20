@@ -9,7 +9,7 @@ from keras.utils import to_categorical
 from mlflow import keras
 from keras.models import Sequential
 from src.experiment_tracking import MLFlowTracker
-from src.model_train import loadData, CNN
+from src.model_train import CNN
 from src.data_preparation import Dataset, PreProcess
 from src.load_data import load_data
 from src import train
