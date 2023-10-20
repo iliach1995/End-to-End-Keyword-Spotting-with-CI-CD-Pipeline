@@ -18,6 +18,7 @@ from sklearn.preprocessing import LabelEncoder
 from datetime import datetime
 from config.config_type import ModelConfig, DataProcessConfig
 
+
 warnings.filterwarnings('ignore')
 
 def main() -> None:
