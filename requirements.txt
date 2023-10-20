@@ -67,8 +67,8 @@ PyJWT==2.8.0
 pyparsing==3.1.1
 pytest==7.4.2
 python-dateutil==2.8.2
-pytz==2023.3.post1
-pywin32==306
+pytz==2023.3.post1;platform_system == "Windows"
+pywin32==306;platform_system == "Windows"
 PyYAML==6.0.1
 querystring-parser==1.2.4
 requests==2.31.0
