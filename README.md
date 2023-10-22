@@ -22,6 +22,117 @@ This project promulgates a `pipeline` that `trains` an end-to-end keyword spotti
 
 ## Directory structure
 
+```
+End-to-End-Keyword-Spotting-with-CI-CD-Pipeline
+│
+├── .github\
+│   │
+│   └── workflows\
+│       └── tests.yaml
+│
+├── .vscode\
+│   └── launch.json
+│
+├── artifacts\
+│   │
+│   ├── model\
+│   │   │
+│   │   ├── data\
+│   │   │   │
+│   │   │   ├── model\
+│   │   │   │   │
+│   │   │   │   ├── assets\
+│   │   │   │   │
+│   │   │   │   ├── variables\
+│   │   │   │   │   ├── variables.data-00000-of-00001
+│   │   │   │   │   └── variables.index
+│   │   │   │   │
+│   │   │   │   ├── fingerprint.pb
+│   │   │   │   ├── keras_metadata.pb
+│   │   │   │   └── saved_model.pb
+│   │   │   │
+│   │   │   ├── keras_module.txt
+│   │   │   └── save_format.txt
+│   │   │
+│   │   ├── MLmodel
+│   │   ├── conda.yaml
+│   │   ├── python_env.yaml
+│   │   └── requirements.txt
+│   │
+│   ├── tensorboard_logs\
+│   │   │
+│   │   ├── train\
+│   │   │   └── events.out.tfevents.1697751968.DESKTOP-3A9L9H3.25540.0.v2
+│   │   │
+│   │   └── validation\
+│   │       └── events.out.tfevents.1697752424.DESKTOP-3A9L9H3.25540.1.v2
+│   │
+│   │
+│   └── model_summary.txt
+│
+├── config\
+│   │
+│   ├── __pycache__\
+│   │   ├── __init__.cpython-310.pyc
+│   │   └── config_type.cpython-310.pyc
+│   │
+│   ├── __init__.py
+│   └── config_type.py
+│
+├── dataset\
+│   │
+│   ├── modeltest\
+│   │   ├── bird.wav
+│   │   ├── cat.wav
+│   │   ├── dog.wav
+│   │   ├── down.wav
+│   │   ├── eight.wav
+│   │   ├── go.wav
+│   │   ├── off.wav
+│   │   └── seven.wav
+│   │
+│   └── test\
+│       ├── __init__.py
+│       └── audio_test.wav
+│
+│
+├── deploy\
+│   ├── __init__.py
+│   └── deployment.yaml
+│
+├── src\
+│   │
+│   ├── __init__.py
+│   ├── audio_process.py
+│   ├── data_preparation.py
+│   ├── data_visualization.py
+│   ├── experiment_tracking.py
+│   ├── inference.py
+│   ├── load_data.py
+│   ├── main.py
+│   ├── model_train.py
+│   ├── parameters.py
+│   └── train.py
+│
+├── static\
+│   ├── bg.jpg
+│   └── page.css
+│
+├── templates\
+│   └── page.html
+│
+├── tests\
+│   │
+│   ├── __init__.py
+│   └── pytest.py
+│
+├── .gitignore
+├── Dockerfile
+├── README.md
+├── __init__.py
+├── app.py
+└── requirements.txt
+```
 
 
 ## Motivation
