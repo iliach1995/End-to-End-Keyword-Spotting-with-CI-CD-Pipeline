@@ -127,7 +127,7 @@ Navigate to the project directory
 
 Install `requirements.txt`
 ```bash
-  git pip install -r requirements.txt
+  pip install -r requirements.txt
 ```
 
 To run inference locally,
