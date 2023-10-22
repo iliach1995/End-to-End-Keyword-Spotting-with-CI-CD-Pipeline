@@ -7,7 +7,7 @@ import warnings
 from keras.utils import to_categorical
 from keras.models import Sequential
 from src.experiment_tracking import MLFlowTracker
-from src.model_train import CNN
+#from src.model_train import CNN
 from src.data_preparation import Dataset, PreProcess
 from src.load_data import load_data
 from src import train
@@ -15,6 +15,8 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from datetime import datetime
 from config.config_type import ModelConfig, DataProcessConfig
+
+from src.model_train2 import CNN
 
 
 warnings.filterwarnings('ignore')
@@ -58,7 +60,6 @@ def main() -> None:
         tracker.log(dt_string)
 
         
-
         model: Sequential = CNN(num_filters = modelConfig.num_filters,
                                 num_dense_layer= modelConfig.num_dense_layer,
                                 input_shape=(dataConfig.n_mfcc, dataConfig.mfcc_length),
@@ -66,7 +67,7 @@ def main() -> None:
                                 kernel_size=modelConfig.kernel_size,
                                 pool_size=modelConfig.pool_size,
                                 dropout=modelConfig.dropout,
-                                num_labels=31).build_model()
+                                num_labels=31).transfer_learning()
 
         
         train.Training( model = model,

@@ -18,6 +18,28 @@ import mlflow.tensorflow as tf
 from src.load_data import load_data
 import tensorflow as tf
 import tensorflow_hub as hub
+from keras.layers import Layer
+import librosa
+from src.audio_process import AudioProcess
+
+class MFCCLayer(Layer):
+    def __init__(self,sr, n_mfcc, mfcc_length, **kwargs):
+        super(MFCCLayer, self).__init__(**kwargs)
+        self.sr = sr
+        self.n_mfcc = n_mfcc
+        self.mfcc_length = mfcc_length
+
+    def build(self, input_shape):
+        super(MFCCLayer, self).build(input_shape)
+
+    def call(self, inputs):
+
+        audio_process = AudioProcess(sr = self.sr, nMfcc = self.n_mfcc, mfccLength=self.mfcc_length)
+        mfcc = audio_process.audiotoMfccFile(inputs)
+        return mfcc
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], self.n_mfcc, self.mfcc_length)
 
 @dataclass
 class CNN():
@@ -85,6 +107,48 @@ class CNN():
 
         return model
 
+    def transfer_learning(self) -> Sequential:
+
+        """
+        Method to define model that can be used for training
+        and inference. This existing model can also be tweaked
+        by changing parameters, based on the requirements.
+
+        
+
+        Return
+        ---------------
+        Sequential model
+        """
+        yamnet_model_handle = 'https://tfhub.dev/google/yamnet/1'
+        
+
+        input_segment = tf.keras.layers.Input(shape=(), dtype=tf.float32, name='audio')
+        embedding_extraction_layer = hub.KerasLayer(yamnet_model_handle,
+                                            trainable=False, name='yamnet')
+        
+        _, embeddings_output, _ = embedding_extraction_layer(input_segment)
+
+        my_model = Sequential(name='custom_top')
+        my_model.add(tf.keras.layers.Input(shape=(1024), dtype=tf.float32,
+                                name='input_embedding'))
+        
+        count = 1
+        for dense_layer in self.num_dense_layer:
+            my_model.add(Dense(dense_layer, name= 'layer'+ str(count)))
+            my_model.add(ReLU())
+            my_model.add(Dropout(self.dropout))
+            count+=1
+
+        my_model.add(Dense(self.num_labels, activation='softmax'))
+        
+        serving_outputs = my_model(embeddings_output)
+
+        serving_model = tf.keras.Model(input_segment, serving_outputs)
+        for l in serving_model.layers:
+            print(l.name, l.trainable)
+        return serving_model
+        
 
 
 if __name__ == "__main__":
