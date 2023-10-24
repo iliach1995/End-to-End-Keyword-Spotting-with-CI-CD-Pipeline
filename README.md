@@ -294,11 +294,11 @@ _________________________________________________________________
 
 | ![input](./images/app.jpeg) |
 |:--:|
-| <b>Figure 1a: App demo for predicting keyword</b>|
+| <b>Figure 2a: App demo for predicting keyword</b>|
 
 | ![input](./images/app_answer.jpeg) |
 |:--:|
-| <b>Figure 1b: App demo for predicted keyword and predicted probability</b>|
+| <b>Figure 2b: App demo for predicted keyword and predicted probability</b>|
 
 ### CI/CD Pipeline
 
