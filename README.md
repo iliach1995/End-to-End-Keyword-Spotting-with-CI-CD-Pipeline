@@ -20,6 +20,16 @@ This project promulgates a `pipeline` that `trains` an end-to-end keyword spotti
  
 <br>
 
+## App Demo
+
+| ![input](./images/app.jpeg) |
+|:--:|
+| <b>Figure 1: App demo for predicting keyword</b>|
+
+| ![input](./images/app_answer.jpeg) |
+|:--:|
+| <b>Figure 2: App demo for predicted keyword and predicted probability</b>|
+
 ## Directory structure
 
 ```
@@ -280,7 +290,7 @@ _________________________________________________________________
 
 | ![model selection](./images/mlflow.png) |
 |:--:|
-| <b>Figure 1: Model selection via MLflow UI</b>|
+| <b>Figure 3: Model selection via MLflow UI</b>|
 
 ### Pytest
 
@@ -291,14 +301,6 @@ _________________________________________________________________
 [Flask](https://flask.palletsprojects.com/en/1.1.x/) is a micro web framework for creating APIs in Python. It is a simple yet powerful web framework with the ability to scale up to complex applications. 
 
 [app.py](./app.py) creates a web application that wraps the trained model to be used for `inferencing` using `real audio data` by means of `FLASK`. It facilitates the application to run from a server which defines every routes and functions to perform. Instead of predicting from a script, it'll be more intuitive to predict from a `GUI`. The front-end is designed using `HTML` scripts from the [templates directory](./templates/) and the page styles are defined in `CSS` in [static directory](./static/).
-
-| ![input](./images/app.jpeg) |
-|:--:|
-| <b>Figure 2a: App demo for predicting keyword</b>|
-
-| ![input](./images/app_answer.jpeg) |
-|:--:|
-| <b>Figure 2b: App demo for predicted keyword and predicted probability</b>|
 
 ### CI/CD Pipeline
 
