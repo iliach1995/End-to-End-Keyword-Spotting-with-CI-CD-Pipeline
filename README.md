@@ -187,6 +187,89 @@ Firstly, the audio has to be embedded into the vector space which constitutes th
 The end-to-end model used in this project is based on a set of `2D convolutional layers` by a set of `fully connected layers`. The main advantage is, it uses `batch normalization` in the `convolutional layers`. The model that accepts `audio MFCC features` as input and outputs `label probabilities` to recognize keywords. 
 `CNN` model has three `2D convolutional layers` with `maxpooling` and `batchnorm` layers for each. The outputs of the convolutional layer is fed the `fully connected dense layer` with `softmax layer` at the end. `ReLU` is the activation function for all layers. `Dropout` layers are added throughout the network for `regularization`. The model summary can be viewed from [here](./artifacts/model_summary.txt). [model_train.py](./src/model_train.py) defines the CNN model with `Tensorflow` and `Keras`. The model training is defined in [train.py](./src/train.py).
 
+```
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ reshape (Reshape)           (None, 99, 40, 1)         0         
+                                                                 
+ batch_normalization (Batch  (None, 99, 40, 1)         4         
+ Normalization)                                                  
+                                                                 
+ re_lu (ReLU)                (None, 99, 40, 1)         0         
+                                                                 
+ conv2d (Conv2D)             (None, 99, 40, 32)        320       
+                                                                 
+ batch_normalization_1 (Bat  (None, 99, 40, 32)        128       
+ chNormalization)                                                
+                                                                 
+ re_lu_1 (ReLU)              (None, 99, 40, 32)        0         
+                                                                 
+ max_pooling2d (MaxPooling2  (None, 49, 20, 32)        0         
+ D)                                                              
+                                                                 
+ dropout (Dropout)           (None, 49, 20, 32)        0         
+                                                                 
+ conv2d_1 (Conv2D)           (None, 49, 20, 64)        18496     
+                                                                 
+ batch_normalization_2 (Bat  (None, 49, 20, 64)        256       
+ chNormalization)                                                
+                                                                 
+ re_lu_2 (ReLU)              (None, 49, 20, 64)        0         
+                                                                 
+ max_pooling2d_1 (MaxPoolin  (None, 24, 10, 64)        0         
+ g2D)                                                            
+                                                                 
+ dropout_1 (Dropout)         (None, 24, 10, 64)        0         
+                                                                 
+ conv2d_2 (Conv2D)           (None, 24, 10, 128)       73856     
+                                                                 
+ batch_normalization_3 (Bat  (None, 24, 10, 128)       512       
+ chNormalization)                                                
+                                                                 
+ re_lu_3 (ReLU)              (None, 24, 10, 128)       0         
+                                                                 
+ max_pooling2d_2 (MaxPoolin  (None, 12, 5, 128)        0         
+ g2D)                                                            
+                                                                 
+ dropout_2 (Dropout)         (None, 12, 5, 128)        0         
+                                                                 
+ conv2d_3 (Conv2D)           (None, 12, 5, 256)        295168    
+                                                                 
+ batch_normalization_4 (Bat  (None, 12, 5, 256)        1024      
+ chNormalization)                                                
+                                                                 
+ re_lu_4 (ReLU)              (None, 12, 5, 256)        0         
+                                                                 
+ max_pooling2d_3 (MaxPoolin  (None, 6, 2, 256)         0         
+ g2D)                                                            
+                                                                 
+ dropout_3 (Dropout)         (None, 6, 2, 256)         0         
+                                                                 
+ flatten (Flatten)           (None, 3072)              0         
+                                                                 
+ layer1 (Dense)              (None, 512)               1573376   
+                                                                 
+ re_lu_5 (ReLU)              (None, 512)               0         
+                                                                 
+ dropout_4 (Dropout)         (None, 512)               0         
+                                                                 
+ layer2 (Dense)              (None, 256)               131328    
+                                                                 
+ re_lu_6 (ReLU)              (None, 256)               0         
+                                                                 
+ dropout_5 (Dropout)         (None, 256)               0         
+                                                                 
+ dense (Dense)               (None, 31)                7967      
+                                                                 
+=================================================================
+Total params: 2102435 (8.02 MB)
+Trainable params: 2101473 (8.02 MB)
+Non-trainable params: 962 (3.76 KB)
+_________________________________________________________________
+```
+
 **Note:** A new method is added to the CNN class for the `transfer learning` using [YAMNet](https://tfhub.dev/google/yamnet/1). Note that the `transfer learning` model input should be `audio files` while the CNN model accepts `audio MFCC features`.
 
 ### MLflow - Model tracking
@@ -194,6 +277,10 @@ The end-to-end model used in this project is based on a set of `2D convolutional
 [MLflow](https://mlflow.org/) is an open source platform for managing end-to-end machine learning lifecycle. It provides functionality to track, log, register and deploy models. But in this project, MLflow is only used for experiment tracking and logging model artifacts with metrics and parameters. The artifacts can be found in [artifacts directory](./artifacts/).
 
 [experiment_tracking.py](./src/experiment_tracking.py) provides the definition of `MLFlowTracker` user-defined dataclass which handles the entire MLflow tracking responsibility. The tracking, logging of model artifacts, parameters etc. are done by `MLFlowTracker` class. MLflow library provides an UI - `mlflow ui` through which all model experiments (runs) can be viewed. The model selection process is done by:
+
+| ![model selection](./images/mlflow.png) |
+|:--:|
+| <b>Figure 1: Model selection via MLflow UI</b>|
 
 ### Pytest
 
@@ -204,6 +291,14 @@ The end-to-end model used in this project is based on a set of `2D convolutional
 [Flask](https://flask.palletsprojects.com/en/1.1.x/) is a micro web framework for creating APIs in Python. It is a simple yet powerful web framework with the ability to scale up to complex applications. 
 
 [app.py](./app.py) creates a web application that wraps the trained model to be used for `inferencing` using `real audio data` by means of `FLASK`. It facilitates the application to run from a server which defines every routes and functions to perform. Instead of predicting from a script, it'll be more intuitive to predict from a `GUI`. The front-end is designed using `HTML` scripts from the [templates directory](./templates/) and the page styles are defined in `CSS` in [static directory](./static/).
+
+| ![input](./images/app.jpeg) |
+|:--:|
+| <b>Figure 1a: App demo for predicting keyword</b>|
+
+| ![input](./images/app_answer.jpeg) |
+|:--:|
+| <b>Figure 1b: App demo for predicted keyword and predicted probability</b>|
 
 ### CI/CD Pipeline
 
