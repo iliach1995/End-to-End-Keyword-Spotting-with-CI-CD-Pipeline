@@ -7,7 +7,7 @@ import warnings
 from keras.utils import to_categorical
 from keras.models import Sequential
 from src.experiment_tracking import MLFlowTracker
-#from src.model_train import CNN
+from src.model_train import CNN
 from src.data_preparation import Dataset, PreProcess
 from src.load_data import load_data
 from src import train
@@ -16,7 +16,6 @@ from sklearn.preprocessing import LabelEncoder
 from datetime import datetime
 from config.config_type import ModelConfig, DataProcessConfig
 
-from src.model_train2 import CNN
 
 
 warnings.filterwarnings('ignore')
